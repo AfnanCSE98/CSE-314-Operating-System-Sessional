@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+mkdir -p ../Output_Dir_Mine
+
+is_extension_allowed(){
+    filename="../input.txt"
+    while read -r line; do
+        #echo $line
+        if [[ "$1" == "$line" ]];
+        then 
+            return 1
+        fi 
+    done < "$filename"
+
+    return 0
+}
+
+for fullfile in $(find $pwd -type f -exec stat --format ' %n' "{}" \; | sort -nr | cut -d: -f2- );
+do
+  filename=$(basename -- "$fullfile")
+  extension="${filename##*.}"
+  filename="${filename%.*}"
+  
+  #if extension not allowed,continue
+  is_extension_allowed $extension
+  if [[ "$" == "$extension" ]];
+  then
+      echo $extension 
+  fi 
+  
+  if [[ "$filename" == "$extension" ]]; #file has no extension
+  then
+      mkdir -p ../Output_Dir_Mine/Others
+      cp $fullfile ../Output_Dir_Mine/Others
+  else
+      mkdir -p ../Output_Dir_Mine/$extension
+      cp $fullfile ../Output_Dir_Mine/$extension
+  
+  fi
+
+  
+  echo $fullfile"--->"$extension
+  
+done
