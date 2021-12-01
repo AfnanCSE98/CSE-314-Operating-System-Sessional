@@ -1,0 +1,7 @@
+jpg
+mp3
+mp4
+png
+./dir3/script04.sh
+./dir1/subdir1/script02.sh
+./1705098.sh

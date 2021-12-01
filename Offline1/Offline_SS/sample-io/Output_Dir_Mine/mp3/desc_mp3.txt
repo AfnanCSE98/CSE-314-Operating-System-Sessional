@@ -1,0 +1,2 @@
+./dir3/music02.mp3
+./dir1/subdir1/music01.mp3
