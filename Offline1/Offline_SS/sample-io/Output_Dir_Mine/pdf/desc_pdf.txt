@@ -1,5 +1,0 @@
-./pdfs5.pdf
-./dir3/subdir6/pdfs5.pdf
-./dir3/pdfs7.pdf
-./dir1/subdir2/pdfs4.pdf
-./dir1/subdir2/pdfs1.pdf

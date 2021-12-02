@@ -1,0 +1,4 @@
+working_dir/images2.png
+working_dir/dir3/subdir6/images2.png
+working_dir/dir3/subdir6/images1.png
+working_dir/dir1/subdir2/images3.png

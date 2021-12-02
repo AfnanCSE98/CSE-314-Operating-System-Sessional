@@ -1,4 +1,0 @@
-./dir3/subdir6/htmls4.html
-./dir3/subdir6/htmls3.html
-./dir1/subdir2/htmls5.html
-./dir1/subdir1/htmls1.html

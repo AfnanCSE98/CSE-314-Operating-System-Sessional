@@ -1,4 +1,0 @@
-./images2.png
-./dir3/subdir6/images2.png
-./dir3/subdir6/images1.png
-./dir1/subdir2/images3.png

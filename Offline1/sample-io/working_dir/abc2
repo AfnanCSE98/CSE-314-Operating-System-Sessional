@@ -8,13 +8,8 @@ while IFS=$'\n' read -r line;
   done < "../input.txt"
 
 
-containsElement () {
-  local e match="$1"
-  shift
-  for e; do [[ "$e" == "$match" ]] && return 0; done
-  return 1
-}
 
+declare -A dict
 
 for fullfile in $(find $pwd -type f | sort -nr | cut -d: -f2- );
 do
@@ -23,6 +18,20 @@ do
   fname="${filename%.*}"
   
   #if extension not allowed,continue
+  allowed=1
+  for i in "${!arr[@]}"
+  do 
+
+    if [[ "${arr[i]}" == "*$extension*" ]]; then 
+      echo "paisi"
+      allowed=0
+      break
+    fi 
+  done
+
+  if [ $allowed -eq 0 ]; then
+    continue
+  fi 
 
   if [[ "$fname" == "$extension" ]]; #file has no extension
   then
@@ -31,16 +40,22 @@ do
       if [ ! -e "../Output_Dir_Mine/Others/desc_others.txt" ] ; then
         touch "../Output_Dir_Mine/Others/desc_others.txt"
       fi
-      echo "$fullfile" >> "../Output_Dir_Mine/Others/desc_others.txt"
+      #append filepath
+      x=${PWD##*/} 
+      y=${fullfile:1}
+      echo "$x$y" >> "../Output_Dir_Mine/Others/desc_others.txt"
       
   else
       mkdir -p ../Output_Dir_Mine/$extension
       cp $fullfile ../Output_Dir_Mine/$extension
       if [ ! -e "../Output_Dir_Mine/$extension/desc_${extension}.txt" ] ; then
         touch "../Output_Dir_Mine/$extension/desc_${extension}.txt"
-        #append filepath
       fi
-      echo "$fullfile" >> ../Output_Dir_Mine/$extension/desc_${extension}.txt
+      #append filepath
+      x=${PWD##*/} 
+      y=${fullfile:1}
+      
+      echo "$x$y" >> ../Output_Dir_Mine/$extension/desc_${extension}.txt
     
   fi
 
