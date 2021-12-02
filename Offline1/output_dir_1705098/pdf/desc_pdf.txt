@@ -1,0 +1,10 @@
+sample-io/working_dir/pdfs5.pdf
+sample-io/working_dir/dir3/subdir6/pdfs5.pdf
+sample-io/working_dir/dir3/pdfs7.pdf
+sample-io/working_dir/dir1/subdir2/pdfs4.pdf
+sample-io/working_dir/dir1/subdir2/pdfs1.pdf
+sample-io/alu/working_dir/pdfs5.pdf
+sample-io/alu/working_dir/dir3/subdir6/pdfs5.pdf
+sample-io/alu/working_dir/dir3/pdfs7.pdf
+sample-io/alu/working_dir/dir1/subdir2/pdfs4.pdf
+sample-io/alu/working_dir/dir1/subdir2/pdfs1.pdf

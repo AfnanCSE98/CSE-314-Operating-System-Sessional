@@ -1,0 +1,4 @@
+sample-io/working_dir/dir3/subdir6/abc1
+sample-io/working_dir/abc2
+sample-io/alu/working_dir/dir3/subdir6/abc1
+sample-io/alu/working_dir/abc2

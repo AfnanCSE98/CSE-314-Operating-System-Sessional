@@ -1,0 +1,5 @@
+sample-io/working_dir/dir3/script04.sh
+sample-io/working_dir/dir1/subdir1/script02.sh
+sample-io/alu/working_dir/dir3/script04.sh
+sample-io/alu/working_dir/dir1/subdir1/script02.sh
+sample-io/1705098.sh

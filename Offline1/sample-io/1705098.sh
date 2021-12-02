@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-
+# assuming input file and working dir resides in the current directory
 inputfile=""
-working_dir=`pwd`
+working_dir=$pwd
 
 if [ $# = "0" ]; then
 
@@ -12,22 +12,26 @@ elif [ $# = "1" ]; then
   	find ./ -type f -name $1 | grep -q $1 > /dev/null && inputfile=$1 
 	else
 		echo "Provide an input file name"
-		working_dir=`find ./ -type d -name $1`
+    #searching working_dir in parent dir
+		find ../ -type d -name $1 | grep -q $1 > /dev/null && working_dir=`find ../ -type d -name $1` 
 	fi
 
 elif [ $# = "2" ]; then
-	if [[ $2 == *".txt"* ]]; then 
-		find ./ -type f -name $2 | grep -q $2 > /dev/null && inputfile_name=$2
+	if [[ "$2" == *".txt"* ]]; then 
+    find ./ -type f -name $2 | grep -q $2 > /dev/null && inputfile=$2
 	else
 		echo "Provide an input file name"
 	fi	
 
-	working_directory=`find ./ -type d -name $1` 
+	find ./ -type d -name $1 | grep -q $1 > /dev/null && working_dir=`find ./ -type d -name $1` 
 
 else
 	echo "Only working directory name (optional) and input file name should be given"
 fi
 
+
+echo "Working Directory : $working_dir"
+echo "Input file : $inputfile"
 
 #chk if wrong input file was given
 while [ "$inputfile" == "" ] ; do 
@@ -39,8 +43,6 @@ fi
 done 
 
 
-mkdir -p ../Output_Dir_Mine
-
 #read input file and store in arr
 arr=()
 while read -r line; 
@@ -49,13 +51,15 @@ while read -r line;
     arr+=($x)
   done < $inputfile
 
-#echo ${#arr[@]}
+
+#output directory
+mkdir -p ../output_dir_1705098
 
 declare -A dict
 
 no_of_ignored=0;
 
-for fullfile in $(find $pwd -type f | sort -nr | cut -d: -f2- );
+for fullfile in $(find $working_dir -type f | sort -nr | cut -d: -f2- );
 do
   filename=$(basename -- "$fullfile")
   extension="${filename##*.}"
@@ -76,30 +80,31 @@ do
     no_of_ignored=$(($no_of_ignored+1))
     continue
   fi 
-  
+
+  #store files in output_dir  
   if [[ "$fname" == "$extension" ]]; #file has no extension
   then
-      mkdir -p ../Output_Dir_Mine/Others
-      cp $fullfile ../Output_Dir_Mine/Others
-      if [ ! -e "../Output_Dir_Mine/Others/desc_others.txt" ] ; then
-        touch "../Output_Dir_Mine/Others/desc_others.txt"
+      mkdir -p ../output_dir_1705098/Others
+      cp $fullfile ../output_dir_1705098/Others
+      if [ ! -e "../output_dir_1705098/Others/desc_others.txt" ] ; then
+        touch "../output_dir_1705098/Others/desc_others.txt"
       fi
       #append filepath
       x=${PWD##*/} 
       y=${fullfile:1}
-      echo "$x$y" >> "../Output_Dir_Mine/Others/desc_others.txt"
+      echo "$x$y" >> "../output_dir_1705098/Others/desc_others.txt"
       
   else
-      mkdir -p ../Output_Dir_Mine/$extension
-      cp $fullfile ../Output_Dir_Mine/$extension
-      if [ ! -e "../Output_Dir_Mine/$extension/desc_${extension}.txt" ] ; then
-        touch "../Output_Dir_Mine/$extension/desc_${extension}.txt"
+      mkdir -p ../output_dir_1705098/$extension
+      cp $fullfile ../output_dir_1705098/$extension
+      if [ ! -e "../output_dir_1705098/$extension/desc_${extension}.txt" ] ; then
+        touch "../output_dir_1705098/$extension/desc_${extension}.txt"
       fi
       #append filepath
       x=${PWD##*/} 
       y=${fullfile:1}
       
-      echo "$x$y" >> ../Output_Dir_Mine/$extension/desc_${extension}.txt
+      echo "$x$y" >> ../output_dir_1705098/$extension/desc_${extension}.txt
     
   fi
 
@@ -107,7 +112,7 @@ done
 
 #creating CSV file
 
-cd ../Output_Dir_Mine
+cd ../output_dir_1705098
 x=$(find . -type f | cut -d/ -f2 | sort | uniq -c)
 #echo $x
 
@@ -122,14 +127,15 @@ do
 done
 
 cd ..
-echo "file type , no_of_files" >> output_mine.csv
+cp /dev/null output_1705098.csv #clearing csv file
+echo "file type , no_of_files" >> output_1705098.csv
 
 
 for i in "${!dict[@]}"
 do
   #echo "key  : $i"
   #echo "value: ${dict[$i]}"
-  echo "$i , ${dict[$i]}" >> output_mine.csv
+  echo "$i , ${dict[$i]}" >> output_1705098.csv
 done
-echo $no_of_ignored
-echo "ignored , $no_of_ignored" >> output_mine.csv
+
+echo "ignored , $no_of_ignored" >> output_1705098.csv

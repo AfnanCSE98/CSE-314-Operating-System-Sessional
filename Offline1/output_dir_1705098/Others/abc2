@@ -1,13 +1,53 @@
 #!/usr/bin/env bash
+
+inputfile=""
+working_dir=`pwd`
+
+if [ $# = "0" ]; then
+
+	echo "No argument from cmd!!working directory name (optional) and input file name must be given"
+
+elif [ $# = "1" ]; then
+	if [[ $1 == *".txt"* ]]; then 
+  	find ./ -type f -name $1 | grep -q $1 > /dev/null && inputfile=$1 
+	else
+		echo "Provide an input file name"
+		working_dir=`find ./ -type d -name $1`
+	fi
+
+elif [ $# = "2" ]; then
+	if [[ $2 == *".txt"* ]]; then 
+		find ./ -type f -name $2 | grep -q $2 > /dev/null && inputfile_name=$2
+	else
+		echo "Provide an input file name"
+	fi	
+
+	working_directory=`find ./ -type d -name $1` 
+
+else
+	echo "Only working directory name (optional) and input file name should be given"
+fi
+
+
+#chk if wrong input file was given
+while [ "$inputfile" == "" ] ; do 
+echo "Provide valid input file"
+read name 
+if [[ $name == *".txt"* ]]; then
+  find ./ -type f -name $name | grep -q $name > /dev/null && inputfile=$name
+fi
+done 
+
+
 mkdir -p ../Output_Dir_Mine
 
-
+#read input file and store in arr
 arr=()
 while read -r line; 
   do
     x=$(echo $line | tr -d '\r')
     arr+=($x)
-  done < "../input.txt"
+  done < $inputfile
 
 #echo ${#arr[@]}
 
@@ -36,7 +76,7 @@ do
     no_of_ignored=$(($no_of_ignored+1))
     continue
   fi 
-
+  
   if [[ "$fname" == "$extension" ]]; #file has no extension
   then
       mkdir -p ../Output_Dir_Mine/Others
@@ -68,7 +108,7 @@ done
 #creating CSV file
 
 cd ../Output_Dir_Mine
-x=$(find . -type f -not -name "*.csv" -not -name "*.txt" | cut -d/ -f2 | sort | uniq -c)
+x=$(find . -type f | cut -d/ -f2 | sort | uniq -c)
 #echo $x
 
 my_array=($(echo $x | tr "[\n\t]" " "))
@@ -76,7 +116,7 @@ my_array=($(echo $x | tr "[\n\t]" " "))
 i=0
 while [ $i -lt ${#my_array[@]} ];
 do
-    dict["${my_array[i+1]}"]=$((${my_array[i]}))
+    dict["${my_array[i+1]}"]=$((${my_array[i]}-1))
     i=$(($i+2))
  
 done
