@@ -1,2 +1,0 @@
-working_dir/dir3/music02.mp3
-working_dir/dir1/subdir1/music01.mp3

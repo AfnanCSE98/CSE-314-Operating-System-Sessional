@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 mkdir -p ../Output_Dir_Mine
 
+
 arr=()
-while IFS=$'\n' read -r line; 
+while read -r line; 
   do
-    arr+=($line)
+    x=$(echo $line | tr -d '\r')
+    arr+=($x)
   done < "../input.txt"
 
-
+#echo ${#arr[@]}
 
 declare -A dict
+
+no_of_ignored=0;
 
 for fullfile in $(find $pwd -type f | sort -nr | cut -d: -f2- );
 do
@@ -22,14 +26,14 @@ do
   for i in "${!arr[@]}"
   do 
 
-    if [[ "${arr[i]}" == "*$extension*" ]]; then 
-      echo "paisi"
+    if [[ "${arr[i]}" == "$extension" ]]; then 
       allowed=0
       break
     fi 
   done
 
   if [ $allowed -eq 0 ]; then
+    no_of_ignored=$(($no_of_ignored+1))
     continue
   fi 
 
@@ -59,6 +63,33 @@ do
     
   fi
 
-  
-  
 done
+
+#creating CSV file
+
+cd ../Output_Dir_Mine
+x=$(find . -type f -not -name "*.csv" -not -name "*.txt" | cut -d/ -f2 | sort | uniq -c)
+#echo $x
+
+my_array=($(echo $x | tr "[\n\t]" " "))
+
+i=0
+while [ $i -lt ${#my_array[@]} ];
+do
+    dict["${my_array[i+1]}"]=$((${my_array[i]}))
+    i=$(($i+2))
+ 
+done
+
+cd ..
+echo "file type , no_of_files" >> output_mine.csv
+
+
+for i in "${!dict[@]}"
+do
+  #echo "key  : $i"
+  #echo "value: ${dict[$i]}"
+  echo "$i , ${dict[$i]}" >> output_mine.csv
+done
+echo $no_of_ignored
+echo "ignored , $no_of_ignored" >> output_mine.csv
