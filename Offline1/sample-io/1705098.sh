@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # assuming input file and working dir resides in the current directory
 inputfile=""
-working_dir=$pwd
+working_dir=""
 
 if [ $# = "0" ]; then
 
@@ -9,29 +9,37 @@ if [ $# = "0" ]; then
 
 elif [ $# = "1" ]; then
 	if [[ $1 == *".txt"* ]]; then 
-  	find ./ -type f -name $1 | grep -q $1 > /dev/null && inputfile=$1 
+  	if [ -e $1 ];then 
+      inputfile=$1
+    fi 
 	else
 		echo "Provide an input file name"
     #searching working_dir in parent dir
-		find ../ -type d -name $1 | grep -q $1 > /dev/null && working_dir=`find ../ -type d -name $1` 
+		if [ -d "$1" ];then 
+      working_dir=$1
+    fi 
 	fi
 
 elif [ $# = "2" ]; then
 	if [[ "$2" == *".txt"* ]]; then 
-    find ./ -type f -name $2 | grep -q $2 > /dev/null && inputfile=$2
+    if [ -e $2 ];then 
+      inputfile=$2
+    fi
 	else
 		echo "Provide an input file name"
 	fi	
 
-	find ./ -type d -name $1 | grep -q $1 > /dev/null && working_dir=`find ./ -type d -name $1` 
-
+	if [ -d "$1" ];then 
+      working_dir=$1
+  fi
 else
 	echo "Only working directory name (optional) and input file name should be given"
 fi
 
-
-echo "Working Directory : $working_dir"
-echo "Input file : $inputfile"
+#if no working-dir given or a wrong working-dir given
+if [ "$working_dir" == "" ]; then 
+  working_dir=$pwd
+fi
 
 #chk if wrong input file was given
 while [ "$inputfile" == "" ] ; do 
@@ -42,6 +50,8 @@ if [[ $name == *".txt"* ]]; then
 fi
 done 
 
+echo "Working Directory : $working_dir"
+echo "Input file : $inputfile"
 
 #read input file and store in arr
 arr=()
@@ -51,9 +61,9 @@ while read -r line;
     arr+=($x)
   done < $inputfile
 
-
-#output directory
-mkdir -p ../output_dir_1705098
+#output directory 
+rm -rf ../output_dir_1705098
+mkdir ../output_dir_1705098
 
 declare -A dict
 
@@ -128,6 +138,7 @@ done
 
 cd ..
 cp /dev/null output_1705098.csv #clearing csv file
+
 echo "file type , no_of_files" >> output_1705098.csv
 
 
