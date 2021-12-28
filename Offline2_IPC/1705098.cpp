@@ -14,9 +14,8 @@ using namespace std;
 ofstream ofs("logfile", ios_base::out );
 pthread_mutex_t ofs_mtx;
 
-const int m = 5, n = 2 , p = 3;
-int w = 6, x = 6 , y = 6 , z = 2;
-int tm_tmp=0;
+int m,n,p,w,x,y,z;
+int curr_time=0;
 int forward_cnt = 0;
 int backward_cnt = 0;
 
@@ -32,36 +31,42 @@ bernoulli_distribution bernouli_dist(0.2);
 
 sem_t mtx;
 sem_t kiosk_empty_sem;
-bool is_kiosk_empty[m];
+bool is_kiosk_empty[10000];
 
-int belt_ara[n];
-sem_t belt_empty_sem[n];
-bool is_belt_empty[n];
+//int belt_ara[n];
+sem_t belt_empty_sem[10000];
+//bool is_belt_empty[n];
+
+void read_file(){
+    fstream myfile("input", std::ios_base::in);
+    myfile >> m >> n >> p;
+    myfile >> w >> x >> y >> z;
+}
 
 void * time_thread(void * arguments){
     while(1){
         sleep(1);
-        tm_tmp++;
+        curr_time++;
     }
 }
 
 void get_pass_from_special_kiosk(int thread_id , bool is_vip){
-    if(is_vip)printf("Passenger %d (VIP) has started waiting in special kiosk at %d\n" , thread_id , tm_tmp);
-    else printf("Passenger %d has started waiting in special kiosk at %d\n" , thread_id , tm_tmp);
+    if(is_vip)printf("Passenger %d (VIP) has started waiting in special kiosk at %d\n" , thread_id , curr_time);
+    else printf("Passenger %d has started waiting in special kiosk at %d\n" , thread_id , curr_time);
     
     pthread_mutex_lock(&esp_kiosk_mtx);
     sleep(w);
 
-    if(is_vip)printf("Passenger %d (VIP) has got his boarding pass from special kiosk at %d \n" , thread_id , tm_tmp);
-    else printf("Passenger %d has got his boarding pass from special kiosk at %d \n" , thread_id , tm_tmp);
+    if(is_vip)printf("Passenger %d (VIP) has got his boarding pass from special kiosk at %d \n" , thread_id , curr_time);
+    else printf("Passenger %d has got his boarding pass from special kiosk at %d \n" , thread_id , curr_time);
     
     pthread_mutex_unlock(&esp_kiosk_mtx);
 
 }
 
 void go_forward(int thread_id , bool is_vip){
-    if(is_vip)printf("Passenger %d (VIP) has arrived at VIP channel at %d\n" , thread_id , tm_tmp);
-    else printf("Passenger %d has arrived at VIP channel at %d\n" , thread_id , tm_tmp);
+    if(is_vip)printf("Passenger %d (VIP) has arrived at VIP channel at %d\n" , thread_id , curr_time);
+    else printf("Passenger %d has arrived at VIP channel at %d\n" , thread_id , curr_time);
 
     pthread_mutex_lock(&forward_cnt_mtx);
     forward_cnt++;
@@ -73,8 +78,8 @@ void go_forward(int thread_id , bool is_vip){
 
     sleep(z);
 
-    if(is_vip)printf("Passenger %d (VIP) has crossed the VIP channel at %d\n" , thread_id , tm_tmp);
-    else printf("Passenger %d has crossed the VIP channel at %d\n" , thread_id , tm_tmp);
+    if(is_vip)printf("Passenger %d (VIP) has crossed the VIP channel at %d\n" , thread_id , curr_time);
+    else printf("Passenger %d has crossed the VIP channel at %d\n" , thread_id , curr_time);
     
     pthread_mutex_lock(&forward_cnt_mtx);
     forward_cnt--;
@@ -87,8 +92,8 @@ void go_forward(int thread_id , bool is_vip){
 
 
 void go_backward(int thread_id , bool is_vip){
-    if(is_vip)printf("Passenger %d (VIP) has arrived at backward VIP channel at %d\n" , thread_id , tm_tmp);
-    else printf("Passenger %d has arrived at backward VIP channel at %d\n" , thread_id , tm_tmp);
+    if(is_vip)printf("Passenger %d (VIP) has arrived at backward VIP channel at %d\n" , thread_id , curr_time);
+    else printf("Passenger %d has arrived at backward VIP channel at %d\n" , thread_id , curr_time);
     
     pthread_mutex_lock(&backward_cnt_mtx);
     backward_cnt++;
@@ -99,8 +104,8 @@ void go_backward(int thread_id , bool is_vip){
 
     sleep(z);
 
-    if(is_vip)printf("Passenger %d (VIP) has passed the VIP channel to reach special kiosk at %d\n" , thread_id , tm_tmp);
-    else printf("Passenger %d has passed the VIP channel to reach special kiosk at %d\n" , thread_id , tm_tmp);
+    if(is_vip)printf("Passenger %d (VIP) has passed the VIP channel to reach special kiosk at %d\n" , thread_id , curr_time);
+    else printf("Passenger %d has passed the VIP channel to reach special kiosk at %d\n" , thread_id , curr_time);
     
     pthread_mutex_lock(&backward_cnt_mtx);
     backward_cnt--;
@@ -118,11 +123,11 @@ bool get_bernouli_status(){
 
 void security_chk(int thread_id){
     int tmp = rand() % n;
-    printf("Passenger %d has started waiting for security check in belt %d at %d\n" , thread_id , tmp+1 , tm_tmp);
+    printf("Passenger %d has started waiting for security check in belt %d at %d\n" , thread_id , tmp+1 , curr_time);
     
     sem_wait(&belt_empty_sem[tmp]);
     sleep(x);
-    printf("Passenger %d has crossed the security check at %d\n" , thread_id , tm_tmp);
+    printf("Passenger %d has crossed the security check at %d\n" , thread_id , curr_time);
     sem_post(&belt_empty_sem[tmp]);
 
 }
@@ -136,9 +141,9 @@ void pass_kiosk(int thread_id , bool is_vip){
         if(is_kiosk_empty[i]){
             is_kiosk_empty[i] = false; 
             if(is_vip){
-                printf("Passenger %d (VIP) has started waiting in kiosk %d at %d \n" , thread_id , i+1 , tm_tmp);    
+                printf("Passenger %d (VIP) has started waiting in kiosk %d at %d \n" , thread_id , i+1 , curr_time);    
             }     
-            else printf("Passenger %d has started waiting in kiosk %d at %d \n" , thread_id , i+1 , tm_tmp);
+            else printf("Passenger %d has started waiting in kiosk %d at %d \n" , thread_id , i+1 , curr_time);
             idx = i;
             break;
         }
@@ -148,8 +153,8 @@ void pass_kiosk(int thread_id , bool is_vip){
 
     sem_wait(&mtx);
     is_kiosk_empty[idx] = true;
-    if(is_vip)printf("Passenger %d (VIP)has got his boarding pass at %d \n" , thread_id , tm_tmp);
-    else printf("Passenger %d has got his boarding pass at %d \n" , thread_id , tm_tmp);
+    if(is_vip)printf("Passenger %d (VIP)has got his boarding pass at %d \n" , thread_id , curr_time);
+    else printf("Passenger %d has got his boarding pass at %d \n" , thread_id , curr_time);
     sem_post(&mtx);
 
     sem_post(&kiosk_empty_sem);
@@ -158,33 +163,31 @@ void pass_kiosk(int thread_id , bool is_vip){
 
 bool boarding_gate(int thread_id , bool is_vip){
     if(get_bernouli_status()){
-        if(is_vip)printf(ANSI_COLOR_RED "Passenger %d (VIP) has lost his boaring pass at %d"  ANSI_COLOR_RESET "\n", thread_id,tm_tmp);
-        else printf(ANSI_COLOR_RED "Passenger %d has lost his boaring pass at %d" ANSI_COLOR_RESET "\n", thread_id,tm_tmp);
+        if(is_vip)printf(ANSI_COLOR_RED "Passenger %d (VIP) has lost his boaring pass at %d"  ANSI_COLOR_RESET "\n", thread_id,curr_time);
+        else printf(ANSI_COLOR_RED "Passenger %d has lost his boaring pass at %d" ANSI_COLOR_RESET "\n", thread_id,curr_time);
         return false;
     }
-    if(is_vip)printf("Passenger %d (VIP) has started waiting for boarding at %d\n" , thread_id , tm_tmp);
-    else printf("Passenger %d has started waiting for boarding at %d\n" , thread_id , tm_tmp);
+    if(is_vip)printf("Passenger %d (VIP) has started waiting for boarding at %d\n" , thread_id , curr_time);
+    else printf("Passenger %d has started waiting for boarding at %d\n" , thread_id , curr_time);
     
     pthread_mutex_lock(&board_mtx);
     sleep(y);
     if(is_vip){
-        printf(ANSI_COLOR_GREEN "Passenger %d (VIP) has boarded the plane at %d" ANSI_COLOR_RESET "\n", thread_id , tm_tmp);
+        printf(ANSI_COLOR_GREEN "Passenger %d (VIP) has boarded the plane at %d" ANSI_COLOR_RESET "\n", thread_id , curr_time);
         pthread_mutex_lock(&ofs_mtx);
-        ofs<<"Passenger "<<thread_id<<" (VIP) has boarded the plane at "<<tm_tmp<<endl;
+        ofs<<"Passenger "<<thread_id<<" (VIP) has boarded the plane at "<<curr_time<<endl;
         pthread_mutex_unlock(&ofs_mtx);
     }
     else {
-        printf(ANSI_COLOR_GREEN "Passenger %d has boarded the plane at %d" ANSI_COLOR_RESET "\n", thread_id , tm_tmp);
+        printf(ANSI_COLOR_GREEN "Passenger %d has boarded the plane at %d" ANSI_COLOR_RESET "\n", thread_id , curr_time);
         pthread_mutex_lock(&ofs_mtx);
-        ofs<<"Passenger "<<thread_id<<" has boarded the plane at "<<tm_tmp<<endl;
+        ofs<<"Passenger "<<thread_id<<" has boarded the plane at "<<curr_time<<endl;
         pthread_mutex_unlock(&ofs_mtx);
     }
     pthread_mutex_unlock(&board_mtx);
 
     return true;
 }
-
-
 
 void * passengerActivity(void * arguments){
     pair<int , bool>*p = (pair<int , bool> *)arguments;
@@ -213,10 +216,15 @@ void init(){
     }
     for(int i=0 ; i<n; i++){
         sem_init(&belt_empty_sem[i] , 0 , p);
-        is_belt_empty[i] = true;
+        //is_belt_empty[i] = true;
     }
     pthread_mutex_init(&board_mtx,NULL);
     pthread_mutex_init(&ofs_mtx , NULL);
+    pthread_mutex_init(&forward_cnt_mtx , NULL);
+    pthread_mutex_init(&backward_cnt_mtx , NULL);
+    pthread_mutex_init(&channel_blocked_mtx , NULL);
+    pthread_mutex_init(&vip_moving_mtx , NULL);
+    pthread_mutex_init(&esp_kiosk_mtx , NULL);
 }
 
 void * create_passengers(void * args){
@@ -246,8 +254,7 @@ void * create_passengers(void * args){
     
 }
 int main(){
-    //debug
-
+    read_file();
     init();
     pthread_t t;
     pthread_create(&t , NULL , time_thread , NULL);
