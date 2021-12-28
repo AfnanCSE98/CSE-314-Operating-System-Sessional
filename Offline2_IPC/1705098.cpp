@@ -3,8 +3,16 @@
 #include<semaphore.h>
 #include<queue>
 #include <unistd.h>
+#include <random>
 #include <bits/stdc++.h>
 using namespace std;
+
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_GREEN   "\x1b[32m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
+
+ofstream ofs("logfile", ios_base::out );
+pthread_mutex_t ofs_mtx;
 
 const int m = 5, n = 2 , p = 3;
 int w = 6, x = 6 , y = 6 , z = 2;
@@ -19,6 +27,8 @@ pthread_mutex_t vip_moving_mtx;
 pthread_mutex_t channel_blocked_mtx;
 pthread_mutex_t esp_kiosk_mtx;
 
+default_random_engine bernouli_generator;
+bernoulli_distribution bernouli_dist(0.2);
 
 sem_t mtx;
 sem_t kiosk_empty_sem;
@@ -41,8 +51,10 @@ void get_pass_from_special_kiosk(int thread_id , bool is_vip){
     
     pthread_mutex_lock(&esp_kiosk_mtx);
     sleep(w);
+
     if(is_vip)printf("Passenger %d (VIP) has got his boarding pass from special kiosk at %d \n" , thread_id , tm_tmp);
-    printf("Passenger %d (VIP) has got his boarding pass from special kiosk at %d \n" , thread_id , tm_tmp);
+    else printf("Passenger %d has got his boarding pass from special kiosk at %d \n" , thread_id , tm_tmp);
+    
     pthread_mutex_unlock(&esp_kiosk_mtx);
 
 }
@@ -50,6 +62,7 @@ void get_pass_from_special_kiosk(int thread_id , bool is_vip){
 void go_forward(int thread_id , bool is_vip){
     if(is_vip)printf("Passenger %d (VIP) has arrived at VIP channel at %d\n" , thread_id , tm_tmp);
     else printf("Passenger %d has arrived at VIP channel at %d\n" , thread_id , tm_tmp);
+
     pthread_mutex_lock(&forward_cnt_mtx);
     forward_cnt++;
     if(forward_cnt == 1){
@@ -86,8 +99,8 @@ void go_backward(int thread_id , bool is_vip){
 
     sleep(z);
 
-    if(is_vip)printf("Passenger %d (VIP) has passed the VIP channel to reach kiosk at %d\n" , thread_id , tm_tmp);
-    else printf("Passenger %d has passed the VIP channel to reach kiosk at %d\n" , thread_id , tm_tmp);
+    if(is_vip)printf("Passenger %d (VIP) has passed the VIP channel to reach special kiosk at %d\n" , thread_id , tm_tmp);
+    else printf("Passenger %d has passed the VIP channel to reach special kiosk at %d\n" , thread_id , tm_tmp);
     
     pthread_mutex_lock(&backward_cnt_mtx);
     backward_cnt--;
@@ -95,6 +108,11 @@ void go_backward(int thread_id , bool is_vip){
         pthread_mutex_unlock(&channel_blocked_mtx);
     }
     pthread_mutex_unlock(&backward_cnt_mtx);
+
+}
+
+bool get_bernouli_status(){
+    return bernouli_dist(bernouli_generator);
 
 }
 
@@ -130,7 +148,8 @@ void pass_kiosk(int thread_id , bool is_vip){
 
     sem_wait(&mtx);
     is_kiosk_empty[idx] = true;
-    printf("Passenger %d has got his boarding pass at %d \n" , thread_id , tm_tmp);
+    if(is_vip)printf("Passenger %d (VIP)has got his boarding pass at %d \n" , thread_id , tm_tmp);
+    else printf("Passenger %d has got his boarding pass at %d \n" , thread_id , tm_tmp);
     sem_post(&mtx);
 
     sem_post(&kiosk_empty_sem);
@@ -138,9 +157,9 @@ void pass_kiosk(int thread_id , bool is_vip){
 }
 
 bool boarding_gate(int thread_id , bool is_vip){
-    if(rand()%2 == 0){
-        if(is_vip)printf("Passenger %d (VIP) has lost his boaring pass!\n" , thread_id);
-        else printf("Passenger %d has lost his boaring pass!\n" , thread_id);
+    if(get_bernouli_status()){
+        if(is_vip)printf(ANSI_COLOR_RED "Passenger %d (VIP) has lost his boaring pass at %d"  ANSI_COLOR_RESET "\n", thread_id,tm_tmp);
+        else printf(ANSI_COLOR_RED "Passenger %d has lost his boaring pass at %d" ANSI_COLOR_RESET "\n", thread_id,tm_tmp);
         return false;
     }
     if(is_vip)printf("Passenger %d (VIP) has started waiting for boarding at %d\n" , thread_id , tm_tmp);
@@ -148,8 +167,18 @@ bool boarding_gate(int thread_id , bool is_vip){
     
     pthread_mutex_lock(&board_mtx);
     sleep(y);
-    if(is_vip)printf("Passenger %d (VIP) has boarded the plane at %d\n" , thread_id , tm_tmp);
-    else printf("Passenger %d has boarded the plane at %d\n" , thread_id , tm_tmp);
+    if(is_vip){
+        printf(ANSI_COLOR_GREEN "Passenger %d (VIP) has boarded the plane at %d" ANSI_COLOR_RESET "\n", thread_id , tm_tmp);
+        pthread_mutex_lock(&ofs_mtx);
+        ofs<<"Passenger "<<thread_id<<" (VIP) has boarded the plane at "<<tm_tmp<<endl;
+        pthread_mutex_unlock(&ofs_mtx);
+    }
+    else {
+        printf(ANSI_COLOR_GREEN "Passenger %d has boarded the plane at %d" ANSI_COLOR_RESET "\n", thread_id , tm_tmp);
+        pthread_mutex_lock(&ofs_mtx);
+        ofs<<"Passenger "<<thread_id<<" has boarded the plane at "<<tm_tmp<<endl;
+        pthread_mutex_unlock(&ofs_mtx);
+    }
     pthread_mutex_unlock(&board_mtx);
 
     return true;
@@ -187,20 +216,47 @@ void init(){
         is_belt_empty[i] = true;
     }
     pthread_mutex_init(&board_mtx,NULL);
+    pthread_mutex_init(&ofs_mtx , NULL);
 }
 
+void * create_passengers(void * args){
+    default_random_engine generator;
+    double *tmp = (double *)args;
+    double lambda = *tmp;
+    poisson_distribution<int> distribution(lambda);
+    bool is_vip;
+    int i = 0;
+    int total_passengers = 0;
+    int no_of_passengers = 0; 
+    int curr = 0;
+    while (1)
+    {
+        no_of_passengers = distribution(generator);
+        total_passengers += no_of_passengers;
+        //cout<<no_of_passengers<<"----"<<endl;
+        pthread_t passengers[no_of_passengers];
+        for(i = 0; i<no_of_passengers ; i++){
+            is_vip = get_bernouli_status();
+            pair<int , bool>*p = new pair<int , bool>(i+curr+1 , is_vip);
+            pthread_create(&passengers[i],NULL,passengerActivity,(void *)p);
+        }
+        curr+=no_of_passengers;
+        sleep(3);
+    }
+    
+}
 int main(){
+    //debug
+
     init();
     pthread_t t;
     pthread_create(&t , NULL , time_thread , NULL);
-    int no_of_passengers = 10;
-    pthread_t passengers[no_of_passengers];
-    bool is_vip;
-    for(int i=0 ; i<no_of_passengers ; i++){
-        is_vip = (rand()%2)==0?true : false;
-        pair<int , bool>*p = new pair<int , bool>(i+1 , is_vip);
-        pthread_create(&passengers[i],NULL,passengerActivity,(void *)p);
-    }
+    
+    pthread_t poisson;
+    double poisson_mean = 10.7;
+    double *lambda;
+    lambda = &poisson_mean;
+    pthread_create(&poisson , NULL , create_passengers , (void *)lambda);
     while(1);
     return 0;
 }
