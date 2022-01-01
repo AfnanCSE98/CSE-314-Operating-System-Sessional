@@ -94,7 +94,8 @@ void go_forward(int thread_id , bool is_vip){
 void go_backward(int thread_id , bool is_vip){
     if(is_vip)printf("Passenger %d (VIP) has arrived at backward VIP channel at %d\n" , thread_id , curr_time);
     else printf("Passenger %d has arrived at backward VIP channel at %d\n" , thread_id , curr_time);
-    
+    pthread_mutex_lock(&vip_moving_mtx);
+    pthread_mutex_unlock(&vip_moving_mtx);
     pthread_mutex_lock(&backward_cnt_mtx);
     backward_cnt++;
     if(backward_cnt == 1){
