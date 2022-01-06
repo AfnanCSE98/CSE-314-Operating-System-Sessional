@@ -1,0 +1,253 @@
+Script started on 2022-01-06 23:40:12+06:00 [TERM="xterm-256color" TTY="/dev/pts/2" COLUMNS="85" LINES="29"]
+Passenger 1(VIP) has arrived at the airport at time 0
+Passenger 1 (VIP) has started self check-in in kiosk 1 at time 0 
+Passenger 2 has arrived at the airport at time 0
+Passenger 2 has started self check-in in kiosk 2 at time 0 
+Passenger 3 has arrived at the airport at time 0
+Passenger 3 has started self check-in in kiosk 3 at time 0 
+Passenger 4 has arrived at the airport at time 1
+Passenger 5 has arrived at the airport at time 1
+Passenger 6 has arrived at the airport at time 1
+Passenger 7(VIP) has arrived at the airport at time 1
+Passenger 8 has arrived at the airport at time 1
+Passenger 9(VIP) has arrived at the airport at time 1
+Passenger 10(VIP) has arrived at the airport at time 1
+Passenger 11 has arrived at the airport at time 2
+Passenger 12 has arrived at the airport at time 2
+Passenger 13 has arrived at the airport at time 2
+Passenger 14 has arrived at the airport at time 2
+Passenger 15 has arrived at the airport at time 2
+Passenger 16 has arrived at the airport at time 2
+Passenger 17(VIP) has arrived at the airport at time 2
+Passenger 18 has arrived at the airport at time 2
+Passenger 19 has arrived at the airport at time 3
+Passenger 20 has arrived at the airport at time 3
+Passenger 1 (VIP)has finished check in at time 8 
+Passenger 1 (VIP) has arrived at VIP channel at time 8
+Passenger 1 (VIP) started moving through VIP channel at time 8
+Passenger 4 has started self check-in in kiosk 1 at time 8 
+Passenger 2 has finished check in at time 8 
+Passenger 2 has started waiting for security check in belt 2 at 8
+Passenger 2 has started the security check at time 8
+Passenger 3 has finished check in at time 8 
+Passenger 3 has started waiting for security check in belt 1 at 8
+Passenger 3 has started the security check at time 8
+Passenger 5 has started self check-in in kiosk 2 at time 8 
+Passenger 6 has started self check-in in kiosk 3 at time 8 
+Passenger 4 has finished check in at time 16 
+Passenger 4 has started waiting for security check in belt 2 at 16
+Passenger 4 has started the security check at time 16
+Passenger 7 (VIP) has started self check-in in kiosk 1 at time 16 
+Passenger 5 has finished check in at time 16 
+Passenger 5 has started waiting for security check in belt 2 at 16
+Passenger 5 has started the security check at time 16
+Passenger 8 has started self check-in in kiosk 2 at time 16 
+Passenger 6 has finished check in at time 16 
+Passenger 6 has started waiting for security check in belt 2 at 16
+Passenger 6 has started the security check at time 16
+Passenger 9 (VIP) has started self check-in in kiosk 3 at time 16 
+Passenger 2 has crossed the security check at time 18
+Passenger 2 has started waiting to be boarded at time 18
+Passenger 2 has started boarding the plane at time 18
+Passenger 3 has crossed the security check at time 18
+Passenger 3 has started waiting to be boarded at time 18
+Passenger 1 (VIP) has crossed the VIP channel at 22
+Passenger 1 (VIP) has started waiting to be boarded at time 22
+[31mPassenger 1 (VIP) has lost his boaring pass at time 22[0m
+Passenger 1 (VIP) has arrived at backward VIP channel at time 22
+Passenger 1 (VIP) started moving through backward VIP channel at time 22
+Passenger 7 (VIP)has finished check in at time 24 
+Passenger 7 (VIP) has arrived at VIP channel at time 24
+Passenger 10 (VIP) has started self check-in in kiosk 1 at time 24 
+Passenger 9 (VIP)has finished check in at time 24 
+Passenger 9 (VIP) has arrived at VIP channel at time 24
+Passenger 11 has started self check-in in kiosk 3 at time 24 
+Passenger 8 has finished check in at time 24 
+Passenger 8 has started waiting for security check in belt 2 at 24
+Passenger 8 has started the security check at time 24
+Passenger 12 has started self check-in in kiosk 2 at time 24 
+Passenger 4 has crossed the security check at time 26
+Passenger 4 has started waiting to be boarded at time 26
+Passenger 5 has crossed the security check at time 26
+Passenger 5 has started waiting to be boarded at time 26
+Passenger 6 has crossed the security check at time 26
+Passenger 6 has started waiting to be boarded at time 26
+[32mPassenger 2 has boarded the plane at time 30[0m
+Passenger 3 has started boarding the plane at time 30
+Passenger 10 (VIP)has finished check in at time 32 
+Passenger 10 (VIP) has arrived at VIP channel at time 32
+Passenger 11 has finished check in at time 32 
+Passenger 13 has started self check-in in kiosk 1 at time 32 
+Passenger 14 has started self check-in in kiosk 3 at time 32 
+Passenger 11 has started waiting for security check in belt 1 at 32
+Passenger 11 has started the security check at time 32
+Passenger 12 has finished check in at time 32 
+Passenger 12 has started waiting for security check in belt 1 at 32
+Passenger 15 has started self check-in in kiosk 2 at time 32 
+Passenger 12 has started the security check at time 32
+Passenger 8 has crossed the security check at time 34
+Passenger 8 has started waiting to be boarded at time 34
+Passenger 1 (VIP) has passed the VIP channel to reach special kiosk at 36
+Passenger 1 (VIP) has started waiting in special kiosk at time 36
+Passenger 7 (VIP) started moving through VIP channel at time 36
+Passenger 10 (VIP) started moving through VIP channel at time 36
+Passenger 9 (VIP) started moving through VIP channel at time 36
+Passenger 13 has finished check in at time 40 
+Passenger 14 has finished check in at time 40 
+Passenger 13 has started waiting for security check in belt 2 at 40
+Passenger 17 (VIP) has started self check-in in kiosk 3 at time 40 
+Passenger 14 has started waiting for security check in belt 2 at 40
+Passenger 14 has started the security check at time 40
+Passenger 16 has started self check-in in kiosk 1 at time 40 
+Passenger 13 has started the security check at time 40
+Passenger 15 has finished check in at time 40 
+Passenger 15 has started waiting for security check in belt 1 at 40
+Passenger 15 has started the security check at time 40
+Passenger 18 has started self check-in in kiosk 2 at time 40 
+Passenger 11 has crossed the security check at time 42
+Passenger 11 has started waiting to be boarded at time 42
+[31mPassenger 11 has lost his boaring pass at time 42[0m
+Passenger 11 has arrived at backward VIP channel at time 42
+Passenger 12 has crossed the security check at time 42
+Passenger 12 has started waiting to be boarded at time 42
+[32mPassenger 3 has boarded the plane at time 42[0m
+Passenger 4 has started boarding the plane at time 42
+Passenger 1 (VIP) has got his boarding pass from special kiosk at time 44 
+Passenger 1 (VIP) has arrived at VIP channel at time 44
+Passenger 1 (VIP) started moving through VIP channel at time 44
+Passenger 17 (VIP)has finished check in at time 48 
+Passenger 16 has finished check in at time 48 
+Passenger 17 (VIP) has arrived at VIP channel at time 48
+Passenger 17 (VIP) started moving through VIP channel at time 48
+Passenger 16 has started waiting for security check in belt 2 at 48
+Passenger 16 has started the security check at time 48
+Passenger 20 has started self check-in in kiosk 3 at time 48 
+Passenger 19 has started self check-in in kiosk 1 at time 48 
+Passenger 18 has finished check in at time 48 
+Passenger 18 has started waiting for security check in belt 1 at 48
+Passenger 18 has started the security check at time 48
+Passenger 9 (VIP) has crossed the VIP channel at 50
+Passenger 9 (VIP) has started waiting to be boarded at time 50
+[31mPassenger 9 (VIP) has lost his boaring pass at time 50[0m
+Passenger 9 (VIP) has arrived at backward VIP channel at time 50
+Passenger 7 (VIP) has crossed the VIP channel at 50
+Passenger 7 (VIP) has started waiting to be boarded at time 50
+Passenger 10 (VIP) has crossed the VIP channel at 50
+Passenger 10 (VIP) has started waiting to be boarded at time 50
+Passenger 14 has crossed the security check at time 50
+Passenger 14 has started waiting to be boarded at time 50
+Passenger 13 has crossed the security check at time 50
+Passenger 13 has started waiting to be boarded at time 50
+[31mPassenger 13 has lost his boaring pass at time 50[0m
+Passenger 13 has arrived at backward VIP channel at time 50
+Passenger 15 has crossed the security check at time 50
+Passenger 15 has started waiting to be boarded at time 50
+[31mPassenger 15 has lost his boaring pass at time 50[0m
+Passenger 15 has arrived at backward VIP channel at time 50
+[32mPassenger 4 has boarded the plane at time 54[0m
+Passenger 5 has started boarding the plane at time 54
+Passenger 19 has finished check in at time 56 
+Passenger 19 has started waiting for security check in belt 2 at 56
+Passenger 19 has started the security check at time 56
+Passenger 20 has finished check in at time 56 
+Passenger 20 has started waiting for security check in belt 2 at 56
+Passenger 20 has started the security check at time 56
+Passenger 1 (VIP) has crossed the VIP channel at 58
+Passenger 1 (VIP) has started waiting to be boarded at time 58
+Passenger 16 has crossed the security check at time 58
+Passenger 16 has started waiting to be boarded at time 58
+Passenger 18 has crossed the security check at time 58
+Passenger 18 has started waiting to be boarded at time 58
+Passenger 17 (VIP) has crossed the VIP channel at 62
+Passenger 17 (VIP) has started waiting to be boarded at time 62
+[31mPassenger 17 (VIP) has lost his boaring pass at time 62[0m
+Passenger 17 (VIP) has arrived at backward VIP channel at time 62
+Passenger 17 (VIP) started moving through backward VIP channel at time 62
+Passenger 11 started moving through backward VIP channel at time 62
+Passenger 9 (VIP) started moving through backward VIP channel at time 62
+Passenger 13 started moving through backward VIP channel at time 62
+Passenger 15 started moving through backward VIP channel at time 62
+Passenger 19 has crossed the security check at time 66
+Passenger 19 has started waiting to be boarded at time 66
+Passenger 20 has crossed the security check at time 66
+Passenger 20 has started waiting to be boarded at time 66
+[31mPassenger 20 has lost his boaring pass at time 66[0m
+Passenger 20 has arrived at backward VIP channel at time 66
+Passenger 20 started moving through backward VIP channel at time 66
+[32mPassenger 5 has boarded the plane at time 66[0m
+Passenger 6 has started boarding the plane at time 66
+Passenger 17 (VIP) has passed the VIP channel to reach special kiosk at 76
+Passenger 17 (VIP) has started waiting in special kiosk at time 76
+Passenger 9 (VIP) has passed the VIP channel to reach special kiosk at 76
+Passenger 11 has passed the VIP channel to reach special kiosk at 76
+Passenger 15 has passed the VIP channel to reach special kiosk at 76
+Passenger 13 has passed the VIP channel to reach special kiosk at 76
+[32mPassenger 6 has boarded the plane at time 78[0m
+Passenger 8 has started boarding the plane at time 78
+Passenger 20 has passed the VIP channel to reach special kiosk at 80
+Passenger 17 (VIP) has got his boarding pass from special kiosk at time 84 
+Passenger 17 (VIP) has arrived at VIP channel at time 84
+Passenger 17 (VIP) started moving through VIP channel at time 84
+Passenger 9 (VIP) has started waiting in special kiosk at time 84
+[32mPassenger 8 has boarded the plane at time 90[0m
+Passenger 12 has started boarding the plane at time 90
+Passenger 9 (VIP) has got his boarding pass from special kiosk at time 92 
+Passenger 9 (VIP) has arrived at VIP channel at time 92
+Passenger 9 (VIP) started moving through VIP channel at time 92
+Passenger 11 has started waiting in special kiosk at time 92
+Passenger 17 (VIP) has crossed the VIP channel at 98
+Passenger 17 (VIP) has started waiting to be boarded at time 98
+Passenger 11 has got his boarding pass from special kiosk at time 100
+Passenger 11 has arrived at VIP channel at time 100
+Passenger 11 started moving through VIP channel at time 100
+Passenger 15 has started waiting in special kiosk at time 100
+[32mPassenger 12 has boarded the plane at time 102[0m
+Passenger 7 (VIP) has started boarding the plane at time 102
+Passenger 9 (VIP) has crossed the VIP channel at 106
+Passenger 9 (VIP) has started waiting to be boarded at time 106
+Passenger 15 has got his boarding pass from special kiosk at time 108
+Passenger 15 has arrived at VIP channel at time 108
+Passenger 15 started moving through VIP channel at time 108
+Passenger 13 has started waiting in special kiosk at time 108
+Passenger 11 has crossed the VIP channel at 114
+Passenger 11 has started waiting to be boarded at time 114
+[32mPassenger 7 (VIP) has boarded the plane at time 114[0m
+Passenger 10 (VIP) has started boarding the plane at time 114
+Passenger 13 has got his boarding pass from special kiosk at time 116
+Passenger 13 has arrived at VIP channel at time 116
+Passenger 13 started moving through VIP channel at time 116
+Passenger 20 has started waiting in special kiosk at time 116
+Passenger 15 has crossed the VIP channel at 122
+Passenger 15 has started waiting to be boarded at time 122
+Passenger 20 has got his boarding pass from special kiosk at time 124
+Passenger 20 has arrived at VIP channel at time 124
+Passenger 20 started moving through VIP channel at time 124
+[32mPassenger 10 (VIP) has boarded the plane at time 126[0m
+Passenger 14 has started boarding the plane at time 126
+Passenger 13 has crossed the VIP channel at 130
+Passenger 13 has started waiting to be boarded at time 130
+Passenger 20 has crossed the VIP channel at 138
+Passenger 20 has started waiting to be boarded at time 138
+[32mPassenger 14 has boarded the plane at time 138[0m
+Passenger 1 (VIP) has started boarding the plane at time 138
+[32mPassenger 1 (VIP) has boarded the plane at time 150[0m
+Passenger 16 has started boarding the plane at time 150
+[32mPassenger 16 has boarded the plane at time 162[0m
+Passenger 18 has started boarding the plane at time 162
+[32mPassenger 18 has boarded the plane at time 174[0m
+Passenger 19 has started boarding the plane at time 174
+[32mPassenger 19 has boarded the plane at time 186[0m
+Passenger 17 (VIP) has started boarding the plane at time 186
+[32mPassenger 17 (VIP) has boarded the plane at time 198[0m
+Passenger 9 (VIP) has started boarding the plane at time 198
+[32mPassenger 9 (VIP) has boarded the plane at time 210[0m
+Passenger 11 has started boarding the plane at time 210
+[32mPassenger 11 has boarded the plane at time 222[0m
+Passenger 15 has started boarding the plane at time 222
+[32mPassenger 15 has boarded the plane at time 234[0m
+Passenger 13 has started boarding the plane at time 234
+[32mPassenger 13 has boarded the plane at time 246[0m
+Passenger 20 has started boarding the plane at time 246
+[32mPassenger 20 has boarded the plane at time 258[0m
+
+Script done on 2022-01-06 23:44:30+06:00 [COMMAND_EXIT_CODE="0"]

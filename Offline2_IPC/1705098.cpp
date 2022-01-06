@@ -45,8 +45,8 @@ void read_file(){
     myfile >> w >> x >> y >> z;
 }
 
-
 auto start = chrono::steady_clock::now();
+
 int get_curr_time(){
     auto end = std::chrono::steady_clock::now();
     chrono::duration<double> elapsed_seconds = end-start;
@@ -54,10 +54,11 @@ int get_curr_time(){
 }
 
 void get_pass_from_special_kiosk(int thread_id , bool is_vip){
+    pthread_mutex_lock(&esp_kiosk_mtx);
+
     if(is_vip)printf("Passenger %d (VIP) has started waiting in special kiosk at time %d\n" , thread_id , get_curr_time());
     else printf("Passenger %d has started waiting in special kiosk at time %d\n" , thread_id , get_curr_time());
     
-    pthread_mutex_lock(&esp_kiosk_mtx);
     sleep(w);
 
     if(is_vip)printf("Passenger %d (VIP) has got his boarding pass from special kiosk at time %d \n" , thread_id , get_curr_time());
@@ -248,48 +249,35 @@ void init(){
     pthread_mutex_init(&vip_moving_mtx , NULL);
     pthread_mutex_init(&esp_kiosk_mtx , NULL);
 }
-
-void * create_passengers(void * args){
-    bool is_vip;
-    int i = 0;
-    //int total_passengers = 0;
-    int passengers_cnt = 0; 
-    int curr = 0;
-    int j = 0;
-    while (j<duration)
-    {
-        passengers_cnt = passengers_at_time[j++];
-        pthread_t passengers[passengers_cnt];
-        for(i = 0; i<passengers_cnt ; i++){
-            is_vip = get_bernouli_status();
-            pair<int , bool>*p = new pair<int , bool>(i+curr+1 , is_vip);
-            pthread_create(&passengers[i],NULL,passengerActivity,(void *)p);
-        }
-        curr+=passengers_cnt;
-        //printf("%d jon at time %d\n" , passengers_cnt , j);
-        sleep(1);
-    }
-    
-}
+   
 
 int main(){
-    for(int i=0;i<duration;i++){
-        passengers_at_time[i] = 0;
-    }
-    default_random_engine generator;
-    double lambda = 10;
-    poisson_distribution<int> distribution(lambda);
-    for(int i=0;i<duration;i++){
-        int num = distribution(generator);
-        if(num<20){
-            passengers_at_time[num]++;
-        }
-    }
+    
     read_file();
     init();
+
+    //generate passengers
+    random_device rd; 
+    mt19937 rng (rd ()); 
+    double lamda = 2;
+    exponential_distribution<double> exp (lamda);
+    double sumArrivalTimes=0;
+    double newArrivalTime;
+    int total_no_of_passengers = 20;
+    bool is_vip;
+    pthread_t passengers[total_no_of_passengers];
+    for (int i = 0; i < total_no_of_passengers; i++)
+    {
+        newArrivalTime=  exp.operator() (rng);// generates the next random number in the distribution 
+        sleep(newArrivalTime);
+        is_vip = get_bernouli_status();
+        pair<int , bool>*p = new pair<int , bool>(i+1 , is_vip);
+        pthread_create(&passengers[i],NULL,passengerActivity,(void *)p);
+        sumArrivalTimes  = sumArrivalTimes + newArrivalTime;  
+        //cout << "newArrivalTime:  " << newArrivalTime  << "    ,sumArrivalTimes:  " << sumArrivalTimes << std::endl;  
+    }
+
+    pthread_exit(NULL);
     
-    pthread_t poisson;
-    pthread_create(&poisson , NULL , create_passengers , NULL);
-    while(1);
     return 0;
 }
