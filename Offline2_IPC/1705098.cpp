@@ -26,7 +26,7 @@ pthread_mutex_t channel_blocked_mtx;
 pthread_mutex_t esp_kiosk_mtx;
 
 default_random_engine bernouli_generator;
-bernoulli_distribution bernouli_dist(0.2);
+bernoulli_distribution bernouli_dist(0.6);
 
 sem_t mtx;
 sem_t kiosk_empty_sem;
@@ -147,7 +147,7 @@ void security_chk(int thread_id){
 void pass_kiosk(int thread_id , bool is_vip){ 
     int idx;
     sem_wait(&kiosk_empty_sem);
-    sem_wait(&mtx);
+    sem_wait(&mtx);//to control the update of is_kiosk_empty
     
     for(int i = 0; i < m ; i++ ){
         if(is_kiosk_empty[i]){
@@ -239,7 +239,6 @@ void init(){
     }
     for(int i=0 ; i<n; i++){
         sem_init(&belt_empty_sem[i] , 0 , p);
-        //is_belt_empty[i] = true;
     }
     pthread_mutex_init(&board_mtx,NULL);
     pthread_mutex_init(&ofs_mtx , NULL);
@@ -263,7 +262,7 @@ int main(){
     exponential_distribution<double> exp (lamda);
     double sumArrivalTimes=0;
     double newArrivalTime;
-    int total_no_of_passengers = 20;
+    int total_no_of_passengers = 10;
     bool is_vip;
     pthread_t passengers[total_no_of_passengers];
     for (int i = 0; i < total_no_of_passengers; i++)
