@@ -8,21 +8,22 @@ index 0000000..691a8f6
 +    "C_Cpp.errorSquiggles": "Disabled"
 +}
 \ No newline at end of file
+diff --git a/1705098.patch b/1705098.patch
+new file mode 100644
+index 0000000..e69de29
 diff --git a/Makefile b/Makefile
-index 09d790c..dfe091f 100644
+index 09d790c..483eff2 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -181,6 +181,9 @@ UPROGS=\
+@@ -181,6 +181,7 @@ UPROGS=\
  	_usertests\
  	_wc\
  	_zombie\
-+	_setticket\
-+	_getpinfo\
 +	_ps\
  
  fs.img: mkfs README $(UPROGS)
  	./mkfs fs.img README $(UPROGS)
-@@ -217,7 +220,7 @@ QEMUGDB = $(shell if $(QEMU) -help | grep -q '^-gdb'; \
+@@ -217,7 +218,7 @@ QEMUGDB = $(shell if $(QEMU) -help | grep -q '^-gdb'; \
  	then echo "-gdb tcp::$(GDBPORT)"; \
  	else echo "-s -p $(GDBPORT)"; fi)
  ifndef CPUS
@@ -31,12 +32,12 @@ index 09d790c..dfe091f 100644
  endif
  QEMUOPTS = -drive file=fs.img,index=1,media=disk,format=raw -drive file=xv6.img,index=0,media=disk,format=raw -smp $(CPUS) -m 512 $(QEMUEXTRA)
  
-@@ -249,7 +252,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
+@@ -249,7 +250,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
  
  EXTRA=\
  	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
 -	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
-+	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c setticket.c getpinfo.c ps.c\
++	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c ps.c\
  	printf.c umalloc.c\
  	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
  	.gdbinit.tmpl gdbutil\
@@ -82,24 +83,6 @@ index 3214f1d..479ba9d 100644
    char name[DIRSIZ];
  };
 -
-diff --git a/getpinfo.c b/getpinfo.c
-new file mode 100644
-index 0000000..345ad7b
---- /dev/null
-+++ b/getpinfo.c
-@@ -0,0 +1,11 @@
-+#include "types.h"
-+#include "stat.h"
-+#include "user.h"
-+#include "pstat.h"
-+
-+int main(int argc, char *argv[]){
-+    struct pstat st;
-+    getpinfo(&st);
-+   
-+    exit();
-+}
-\ No newline at end of file
 diff --git a/memlayout.h b/memlayout.h
 index d1615f7..6b7d339 100644
 --- a/memlayout.h
@@ -121,7 +104,7 @@ index a7e90ef..d74f51a 100644
  #define FSSIZE       1000  // size of file system in blocks
 -
 diff --git a/proc.c b/proc.c
-index 806b1b1..116af14 100644
+index 806b1b1..edbe14e 100644
 --- a/proc.c
 +++ b/proc.c
 @@ -6,12 +6,61 @@
@@ -221,7 +204,7 @@ index 806b1b1..116af14 100644
          release(&ptable.lock);
          return pid;
        }
-@@ -326,24 +389,63 @@ scheduler(void)
+@@ -326,29 +389,69 @@ scheduler(void)
    struct cpu *c = mycpu();
    c->proc = 0;
    
@@ -248,9 +231,6 @@ index 806b1b1..116af14 100644
      for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
 -      if(p->state != RUNNABLE)
 +      if(p->state != RUNNABLE){
-+        //added by afnan
-+        sum += p->tickets;
-+        //code ended by afnan
          continue;
 +      }
 +      //added by afnan
@@ -282,11 +262,20 @@ index 806b1b1..116af14 100644
 +      release(&tickslock);
 +      p->ticks += elapsed;
 +      //code ended by afnan
-+      
++
        switchkvm();
  
        // Process is done running for now.
-@@ -438,6 +540,10 @@ sleep(void *chan, struct spinlock *lk)
+       // It should have changed its p->state before coming back.
+       c->proc = 0;
++      
++      //added by afnan
++      break;
++      //code ened by afnan
+     }
+     release(&ptable.lock);
+ 
+@@ -438,6 +541,10 @@ sleep(void *chan, struct spinlock *lk)
    // Go to sleep.
    p->chan = chan;
    p->state = SLEEPING;
@@ -297,7 +286,7 @@ index 806b1b1..116af14 100644
  
    sched();
  
-@@ -460,8 +566,13 @@ wakeup1(void *chan)
+@@ -460,8 +567,13 @@ wakeup1(void *chan)
    struct proc *p;
  
    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
@@ -312,7 +301,7 @@ index 806b1b1..116af14 100644
  }
  
  // Wake up all processes sleeping on chan.
-@@ -486,8 +597,13 @@ kill(int pid)
+@@ -486,8 +598,13 @@ kill(int pid)
      if(p->pid == pid){
        p->killed = 1;
        // Wake process from sleep if necessary.
@@ -486,29 +475,6 @@ index 0000000..8ee439b
 +	    c++;
 +	}
 +	return (Q[i] = r - x);
-+}
-\ No newline at end of file
-diff --git a/setticket.c b/setticket.c
-new file mode 100644
-index 0000000..b0736ed
---- /dev/null
-+++ b/setticket.c
-@@ -0,0 +1,16 @@
-+#include "types.h"
-+#include "stat.h"
-+#include "user.h"
-+#include "pstat.h"
-+
-+int main(int argc, char *argv[]){
-+   // if(settickets(atoi(argv[1]))==0){
-+    //    printf(1 , "current process got %d tickets\n" , atoi(argv[1]));
-+    //}
-+    int pid = fork();
-+    printf(1,"child created %d\n" , pid);
-+        settickets(atoi(argv[1])+getpid());
-+ 
-+        settickets(atoi(argv[1])+getpid());
-+    exit();
 +}
 \ No newline at end of file
 diff --git a/syscall.c b/syscall.c
