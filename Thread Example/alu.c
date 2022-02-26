@@ -8,6 +8,7 @@ tid = (int) threadid;
 printf("Hello World! It's me, thread: %d!\n", tid);
 pthread_exit(NULL);
 }
+
 int main (int argc, char *argv[]) {
 pthread_t threads[NUM_THREADS];
 int rc;
